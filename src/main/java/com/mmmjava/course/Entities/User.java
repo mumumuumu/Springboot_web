@@ -1,9 +1,13 @@
-package Entities;
+package com.mmmjava.course.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 @Entity
 @Table(name = "tb_user")
@@ -13,11 +17,16 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private String email;
     private String phone;
     private String password;
-
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
+    public User() {
+    }
     public User(Long id, String email, String name, String password, String phone) {
         this.id = id;
         this.email = email;
@@ -76,4 +85,10 @@ public class User implements Serializable {
     public int hashCode() {
         return 0;
     }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+
 }
