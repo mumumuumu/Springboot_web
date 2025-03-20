@@ -1,5 +1,6 @@
 package com.mmmjava.course.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -11,17 +12,20 @@ import java.util.Objects;
 public class OrderItem implements Serializable {
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    private OrderItemPK id;
+    private final OrderItemPK id = new OrderItemPK();
+
     private Integer quantity;
     private double price;
+    public OrderItem(){
 
-    public OrderItem(Integer quantity, double price, Order order, Product product) {
+    }
+    public OrderItem(Order order, Product product, Integer quantity, double price) {
         id.setOrder(order);
         id.setProduct(product);
         this.quantity = quantity;
         this.price = price;
     }
-
+    @JsonIgnore
     public Order getOrder(){
         return id.getOrder();
     }
@@ -52,7 +56,8 @@ public class OrderItem implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof OrderItem orderItem)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderItem orderItem = (OrderItem) o;
         return Objects.equals(id, orderItem.id);
     }
 
